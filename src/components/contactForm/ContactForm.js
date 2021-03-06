@@ -56,6 +56,23 @@ const ContactForm = () => {
    }
   }
 
+    const handleUpdate = (id, data) => async () => {
+      let value = {
+        id: data.id,
+        name: data.name,
+        email: data.email,
+        phoneNumber: data.phoneNumber,
+        address: data.address,
+        active: active,
+      };
+      const res = await axios.put(`api/contact/${id}`, value);
+      if (res.data && res.status === 200) {
+        handleReset()
+       getContactInfo()
+      }
+    };
+
+
   const handleEdit = (data) => async() => {
     setActive(data.active)
     setIntialValue({
@@ -66,6 +83,7 @@ const ContactForm = () => {
       address: data.address,
     });
   }
+
 
   const handleReset = () => {
     setActive("Yes")
@@ -150,7 +168,7 @@ const ContactForm = () => {
           };
           handleSubmit(data, resetForm);
           getContactInfo();
-          handleReset()
+          handleReset();
         }}
       >
         {({ values, handleSubmit, handleChange, errors, touched }) => (
@@ -245,13 +263,31 @@ const ContactForm = () => {
                     <label htmlFor="">No</label>
                   </div>
                 </div>
-                
+                {values.id ? (
+                  <button
+                    className="btn btn-primary btn-sm mt-2 ml-2 float-right"
+                    type="button"
+                    onClick={handleUpdate(values.id,values)}
+                  >
+                    Update
+                  </button>
+                ) : (
                   <button
                     className="btn btn-primary btn-sm mt-2 ml-2 float-right"
                     type="submit"
                   >
                     Submit
                   </button>
+                )}
+                {values.id && (
+                  <button
+                    className="btn btn-outline-secondary btn-sm mt-2 ml-2 float-right"
+                    type="button"
+                    onClick={handleReset}
+                  >
+                    Reset
+                  </button>
+                )}
               </div>
             </form>
           </>

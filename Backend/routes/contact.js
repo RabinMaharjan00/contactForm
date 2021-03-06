@@ -12,9 +12,43 @@ router.get("/contact", (req, res) => {
 });
 
 router.post("/contact", (req,res) => {
-    res.status(200).json({ message: "Data successfully saved", status: 200 });
-    const contactData = req.body;
-    value.push(contactData);
+  const contactData = req.body;
+  const newValue = {
+    id:contactData.id,
+    name:contactData.name,
+    address:contactData.address,
+    email:contactData.email,
+    phoneNumber:contactData.phoneNumber,
+    active:contactData.active
+  }
+  if(!newValue.name || !newValue.phoneNumber ) {
+    return res.status(400).json({message:"Please enter name and phoneNumber"})
+  }
+  value.push(contactData);
+  res.status(200).json({ data:value, message: "Data successfully saved", status: 200 });
+})
+
+router.put("/contact/:id", (req,res) => {
+  const foundIndex = value.some(index => index.id === req.params.id)
+  if(foundIndex) {
+    const updateValue = req.body;
+    value.forEach((data) => {
+      if(data.id === req.params.id) {
+        data.name = updateValue.name?updateValue.name:data.name
+        data.address = updateValue.address ? updateValue.address : data.address;
+        data.email = updateValue.email ? updateValue.email : data.email;
+        data.phoneNumber = updateValue.phoneNumber ? updateValue.phoneNumber : data.phoneNumber;
+        data.active = updateValue.active ? updateValue.active : data.active;
+        res.json({
+          data:value,
+          message:"Data is successfully updated",
+          status:200
+        })
+      }
+    })
+  } else {
+    res.status(400).json({message:`No contact information with id of ${req.params.id} is found`})
+  }
 })
 
 router.delete("/contact/:id", (req, res) => {
