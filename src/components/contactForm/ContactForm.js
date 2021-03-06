@@ -24,7 +24,6 @@ const initialValueValidationSchema = YupObject().shape({
 const ContactForm = () => {
   const [contactData, setContactData] = useState([]);
   const [initialValues, setIntialValue] = useState(initialValue)
-  const [updateData, setUpdate] = useState([])
   const [active,setActive] = useState("Yes")
 
   const activeContact = contactData?.data?.map((contacts) => contacts).filter((data) => data?.active === "Yes") 
@@ -151,6 +150,7 @@ const ContactForm = () => {
           };
           handleSubmit(data, resetForm);
           getContactInfo();
+          handleReset()
         }}
       >
         {({ values, handleSubmit, handleChange, errors, touched }) => (
